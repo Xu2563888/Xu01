@@ -1,28 +1,31 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { motion } from 'motion/react';
+import { DiaryEntry } from '../types';
 
-export const Calendar: React.FC = () => {
+export const Calendar: React.FC<{ entries: DiaryEntry[] }> = ({ entries }) => {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const prevMonthDays = [25, 26, 27, 28, 29, 30];
-  const currentMonthDays = [
-    { day: 1, color: 'bg-secondary-container' },
-    { day: 2, color: 'bg-tertiary-container' },
-    { day: 3, color: 'bg-primary-container' },
-    { day: 4, color: 'bg-secondary' },
-    { day: 5, color: 'bg-tertiary' },
-    { day: 6, color: 'bg-primary', active: true },
-    { day: 7, color: 'bg-surface-container-highest' },
-    { day: 8, color: 'bg-[#f0c1b8]' },
-    { day: 9, color: 'bg-[#caebcc]' },
-    { day: 10, color: 'bg-[#e4d7fd]' },
-  ];
+  const prevMonthDays = [23, 24, 25, 26, 27, 28]; // March 2026 starts on Sunday (1st)
+  
+  // Mock current month days for March 2026
+  const currentMonthDays = Array.from({ length: 31 }, (_, i) => {
+    const day = i + 1;
+    const entry = entries.find(e => {
+      const d = new Date(e.timestamp);
+      return d.getDate() === day && d.getMonth() === 2 && d.getFullYear() === 2026;
+    });
+    return {
+      day,
+      colors: entry ? entry.colors : [],
+      active: day === 22 // Keep 22 as "today" (March 22, 2026)
+    };
+  });
 
   return (
     <section className="mt-4 px-6">
       <div className="flex justify-between items-end mb-8">
         <div>
-          <span className="text-on-surface-variant font-medium text-sm tracking-widest uppercase">October 2023</span>
+          <span className="text-on-surface-variant font-medium text-sm tracking-widest uppercase">March 2026</span>
           <h2 className="text-4xl font-extrabold text-primary leading-tight mt-1">光影流转</h2>
         </div>
         <div className="flex gap-2 pb-1">
@@ -45,9 +48,13 @@ export const Calendar: React.FC = () => {
         ))}
         
         {currentMonthDays.map(item => (
-          <div key={`curr-${item.day}`} className="flex flex-col items-center gap-2 relative text-sm">
+          <div key={`curr-${item.day}`} className="flex flex-col items-center gap-1 relative text-sm">
             <span className={item.active ? 'font-bold text-primary' : ''}>{item.day}</span>
-            <div className={`w-1.5 h-1.5 rounded-full ${item.color}`}></div>
+            <div className="flex gap-0.5 flex-wrap justify-center max-w-[24px]">
+              {item.colors.map((c, i) => (
+                <div key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: c }}></div>
+              ))}
+            </div>
             {item.active && (
               <div className="absolute -top-1 w-8 h-8 rounded-full border border-primary/20 -z-10"></div>
             )}
@@ -59,15 +66,10 @@ export const Calendar: React.FC = () => {
 };
 
 export const RecordCard: React.FC<{
-  date: string;
-  title: string;
-  score: string;
-  desc: string;
-  colors: string[];
-  image: string;
+  entry: DiaryEntry;
   rotation: number;
   onClick: () => void;
-}> = ({ date, title, score, desc, colors, image, rotation, onClick }) => {
+}> = ({ entry, rotation, onClick }) => {
   return (
     <motion.div 
       whileHover={{ scale: 1.02 }}
@@ -80,8 +82,8 @@ export const RecordCard: React.FC<{
         style={{ transform: `rotate(${rotation}deg)` }}
       >
         <img 
-          src={image} 
-          alt={title} 
+          src={entry.image} 
+          alt={entry.title} 
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover blur-[2px] scale-110" 
         />
@@ -91,18 +93,18 @@ export const RecordCard: React.FC<{
       <div className="flex-1 space-y-3 pt-2">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-[10px] font-bold text-outline-variant tracking-widest uppercase">{date}</p>
-            <h4 className="text-lg font-bold text-on-surface">{title}</h4>
+            <p className="text-[10px] font-bold text-outline-variant tracking-widest uppercase">{entry.date} · {entry.dayOfWeek}</p>
+            <h4 className="text-lg font-bold text-on-surface">{entry.title}</h4>
           </div>
           <div className="bg-secondary-container px-2 py-1 rounded-full">
-            <span className="text-[10px] font-bold text-on-secondary-container">{score}</span>
+            <span className="text-[10px] font-bold text-on-secondary-container">{entry.score}</span>
           </div>
         </div>
         <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-2 italic">
-          {desc}
+          {entry.content}
         </p>
         <div className="flex gap-2 pt-2">
-          {colors.map((c, i) => (
+          {entry.colors.map((c, i) => (
             <div key={i} className="w-6 h-6 rounded-full shadow-sm" style={{ backgroundColor: c }}></div>
           ))}
         </div>
