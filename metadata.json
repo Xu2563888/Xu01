@@ -1,0 +1,8 @@
+{
+  "name": "色彩日记 (Chromatic Diary)",
+  "description": "一个记录情绪与色彩的数字避风港，通过色彩捕捉瞬间的宁静与感悟。",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

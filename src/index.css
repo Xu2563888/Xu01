@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-surface: #f8f6f2;
+  --color-on-surface: #2e2f2d;
+  --color-on-surface-variant: #5b5c59;
+  
+  --color-primary: #76534c;
+  --color-on-primary: #ffefec;
+  --color-primary-container: #ffcfc6;
+  --color-on-primary-container: #66443e;
+  
+  --color-secondary: #46624a;
+  --color-on-secondary: #dafbdc;
+  --color-secondary-container: #caebcc;
+  --color-on-secondary-container: #3c5841;
+  
+  --color-tertiary: #605676;
+  --color-on-tertiary: #f8f0ff;
+  --color-tertiary-container: #e4d7fd;
+  --color-on-tertiary-container: #534968;
+
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f1ec;
+  --color-surface-container: #e9e8e4;
+  --color-surface-container-high: #e4e2de;
+  --color-surface-container-highest: #deddd8;
+  
+  --color-outline: #777774;
+  --color-outline-variant: #aeadaa;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-on-surface font-sans antialiased;
+  }
+}
+
+.glass-effect {
+  @apply bg-surface/70 backdrop-blur-xl;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
